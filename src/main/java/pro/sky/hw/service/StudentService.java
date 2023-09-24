@@ -11,10 +11,14 @@ import java.util.stream.Collectors;
 @Service
 public class StudentService {
 
-    private Map<Long, Student> students = new HashMap<>();
+    private final Map<Long, Student> students = new HashMap<>();
     private Long nextId = 0L;
 
+
     public Student createStudent(Student student) {
+        if (getAllStudents().contains(student)) {
+            return null;
+        }
         student.setId(++nextId);
         students.put(nextId, student);
         return student;
@@ -29,7 +33,11 @@ public class StudentService {
     }
 
     public Student editStudent(Student student) {
-        return students.put(student.getId(), student);
+        if (students.containsKey(student.getId())) {
+            students.put(student.getId(), student);
+            return student;
+        }
+        return null;
     }
 
     public Student removeStudent(Long id) {
